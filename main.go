@@ -147,4 +147,10 @@ func main() {
 	defer f.Close()
 	img := NewImage()
 	png.Encode(f, img)
+	rs := RS{}
+	rs.InitTables(0x11d)
+	result := rs.RsEncodeMsg(arrayData, 17)
+	for i := 0; i < len(result); i++ {
+		fmt.Printf("%d ", result[i])
+	}
 }
