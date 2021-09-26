@@ -153,8 +153,5 @@ func (rs RS) RsEncodeMsg(msgIn []uint, nsym int) []int {
 			}
 		}
 	}
-	for i := 0; i < len(msgIn); i++ {
-		msgOut[i] = int(msgIn[i])
-	}
-	return msgOut
+	return msgOut[len(msgIn):]
 }
