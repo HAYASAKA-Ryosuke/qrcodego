@@ -46,9 +46,9 @@ func posRight(x, y, xLimit int) (int, int, bool) {
 	return x + 1, y, true
 }
 
-func DrawQRCode() *image.RGBA {
-	cellNumber := 21 // 縦と横のそれぞれのセル数(21x21)
-	w, h := 210, 210 // window size
+func DrawQRCode(bitmap [][]int) *image.RGBA {
+	cellNumber := len(bitmap) // 縦と横のそれぞれのセル数(21x21)
+	w, h := 210, 210          // window size
 	cellSizeW, cellSizeH := w/cellNumber, h/cellNumber
 	m := image.NewRGBA(image.Rect(0, 0, w, h))
 
@@ -65,12 +65,12 @@ func DrawQRCode() *image.RGBA {
 		255,
 	}
 
-	for posx := 0; posx < cellNumber; posx++ {
-		for posy := 0; posy < cellNumber; posy++ {
-			if posx%2 == 0 && posy%2 == 0 {
-				drawCell(m, posx, posy, white, cellSizeW, cellSizeH)
+	for row := 0; row < cellNumber; row++ {
+		for col := 0; col < cellNumber; col++ {
+			if bitmap[row][col] == 0 {
+				drawCell(m, row, col, black, cellSizeW, cellSizeH)
 			} else {
-				drawCell(m, posx, posy, black, cellSizeW, cellSizeH)
+				drawCell(m, row, col, white, cellSizeW, cellSizeH)
 			}
 		}
 	}
@@ -353,8 +353,6 @@ func main() {
 	for i := 0; i < len(rsEncode); i++ {
 		arrayData = append(arrayData, uint(rsEncode[i]))
 	}
-	img := DrawQRCode()
-	png.Encode(f, img)
 	bitmap := createBitmap(arrayData)
 	for x := 0; x < 21; x++ {
 		for y := 0; y < 21; y++ {
@@ -370,4 +368,6 @@ func main() {
 	fmt.Print(fmt.Sprintf("%x ", arrayData))
 	fmt.Println()
 	fmt.Println(bitmap[19][20])
+	img := DrawQRCode(bitmap)
+	png.Encode(f, img)
 }
