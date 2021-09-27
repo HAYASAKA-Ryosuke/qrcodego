@@ -153,34 +153,34 @@ func fixedPatterns(bitmap [][]int, cellSize, fixedPos int) {
 		bitmap[i][fixedPos] = i % 2
 	}
 	finderPatternLeftUps := [][]int{
-		{0, 0, 0, 0, 0, 0, 0, 2},
-		{0, 2, 2, 2, 2, 2, 0, 2},
-		{0, 2, 0, 0, 0, 2, 0, 2},
-		{0, 2, 0, 0, 0, 2, 0, 2},
-		{0, 2, 0, 0, 0, 2, 0, 2},
-		{0, 2, 2, 2, 2, 2, 0, 2},
-		{0, 0, 0, 0, 0, 0, 0, 2},
-		{2, 2, 2, 2, 2, 2, 2, 2},
+		{0, 0, 0, 0, 0, 0, 0, 1},
+		{0, 1, 1, 1, 1, 1, 0, 1},
+		{0, 1, 0, 0, 0, 1, 0, 1},
+		{0, 1, 0, 0, 0, 1, 0, 1},
+		{0, 1, 0, 0, 0, 1, 0, 1},
+		{0, 1, 1, 1, 1, 1, 0, 1},
+		{0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 1, 1, 1, 1, 1, 1, 1},
 	}
 	finderPatternRightUps := [][]int{
-		{2, 0, 0, 0, 0, 0, 0, 0},
-		{2, 0, 2, 2, 2, 2, 2, 0},
-		{2, 0, 2, 0, 0, 0, 2, 0},
-		{2, 0, 2, 0, 0, 0, 2, 0},
-		{2, 0, 2, 0, 0, 0, 2, 0},
-		{2, 0, 2, 2, 2, 2, 2, 0},
-		{2, 0, 0, 0, 0, 0, 0, 0},
-		{2, 2, 2, 2, 2, 2, 2, 2},
+		{1, 0, 0, 0, 0, 0, 0, 0},
+		{1, 0, 1, 1, 1, 1, 1, 0},
+		{1, 0, 1, 0, 0, 0, 1, 0},
+		{1, 0, 1, 0, 0, 0, 1, 0},
+		{1, 0, 1, 0, 0, 0, 1, 0},
+		{1, 0, 1, 1, 1, 1, 1, 0},
+		{1, 0, 0, 0, 0, 0, 0, 0},
+		{1, 1, 1, 1, 1, 1, 1, 1},
 	}
 	finderPatternLeftDowns := [][]int{
-		{2, 2, 2, 2, 2, 2, 2, 2},
-		{0, 0, 0, 0, 0, 0, 0, 2},
-		{0, 2, 2, 2, 2, 2, 0, 2},
-		{0, 2, 0, 0, 0, 2, 0, 2},
-		{0, 2, 0, 0, 0, 2, 0, 2},
-		{0, 2, 0, 0, 0, 2, 0, 2},
-		{0, 2, 2, 2, 2, 2, 0, 2},
-		{0, 0, 0, 0, 0, 0, 0, 2},
+		{1, 1, 1, 1, 1, 1, 1, 1},
+		{0, 0, 0, 0, 0, 0, 0, 1},
+		{0, 1, 1, 1, 1, 1, 0, 1},
+		{0, 1, 0, 0, 0, 1, 0, 1},
+		{0, 1, 0, 0, 0, 1, 0, 1},
+		{0, 1, 0, 0, 0, 1, 0, 1},
+		{0, 1, 1, 1, 1, 1, 0, 1},
+		{0, 0, 0, 0, 0, 0, 0, 1},
 	}
 	for x := 0; x < 8; x++ {
 		for y := 0; y < 8; y++ {
@@ -205,43 +205,90 @@ func fixedPatterns(bitmap [][]int, cellSize, fixedPos int) {
 }
 
 func drawData(bitmap [][]int, bitString string) {
-
-	pattern := "rightleft"
-	currentPosCol := len(bitmap)
-	currentPosRow := len(bitmap[0])
+	currentPosRow := len(bitmap) - 1
+	currentPosCol := len(bitmap[0]) - 1
 	count := 0
-
-	for row := len(bitmap); row >= 0; row-- {
-		for col := len(bitmap[row]); col >= 0; col-- {
-			if pattern == "rightleft" {
-				if count < len(bitString) {
-					if bitmap[currentPosCol][currentPosRow-1] != 2 {
-						currentPosRow -= 1
-						bitmap[currentPosCol][currentPosRow] = int(bitString[count])
-					}
-				} else {
-					if bitmap[currentPosCol][currentPosRow-1] != 2 {
-						currentPosRow -= 1
-						bitmap[currentPosCol][currentPosRow] = 0
-					}
-				}
-				pattern = "upright"
+	for {
+		if currentPosCol != 6 && currentPosRow != 6 {
+			if count < len(bitString) {
+				fmt.Println(int(bitString[count]) - 48)
+				bitmap[currentPosRow][currentPosCol] = int(bitString[count]) - 48
+				count++
+			} else {
+				bitmap[currentPosRow][currentPosCol] = 0
 			}
-			if pattern == "upright" {
-				if count < len(bitString) {
-					if bitmap[currentPosCol-1][currentPosRow+1] != 2 {
-						currentPosRow += 1
-						currentPosCol -= 1
-						bitmap[currentPosCol][currentPosRow] = int(bitString[count])
-					}
+		}
+		fmt.Printf("Row: %d, Col: %d\n", currentPosRow, currentPosCol)
+		if currentPosCol == 0 && currentPosRow == 12 {
+			break
+		} else if currentPosCol == 6 {
+			currentPosCol -= 1
+		} else if currentPosCol < 6 {
+			if currentPosCol%4 == 0 {
+				if currentPosRow == 12 {
+					// 左
+					currentPosCol -= 1
 				} else {
-					if bitmap[currentPosCol-1][currentPosRow+1] != 2 {
-						currentPosRow += 1
-						currentPosCol -= 1
-						bitmap[currentPosCol][currentPosRow] = 0
-					}
+					// 右下
+					currentPosCol += 1
+					currentPosRow += 1
 				}
-				pattern = "rightleft"
+			} else if currentPosCol%4 == 1 {
+				// 左
+				currentPosCol -= 1
+			} else if currentPosCol%4 == 2 {
+				if currentPosRow == 9 {
+					// 左
+					currentPosCol -= 1
+				} else {
+					// 右上
+					currentPosCol += 1
+					currentPosRow -= 1
+				}
+			} else if currentPosCol%4 == 3 {
+				// 左
+				currentPosCol -= 1
+			}
+		} else {
+			if (currentPosCol-7)%4 == 0 {
+				if currentPosRow == 0 || (currentPosRow == 9 && (currentPosCol <= 8 || currentPosCol >= 13)) {
+					// 左
+					currentPosCol -= 1
+				} else {
+					// 右上
+					currentPosCol += 1
+					currentPosRow -= 1
+				}
+			} else if (currentPosCol-7)%4 == 1 {
+				if currentPosRow == 6 {
+					// 上
+					currentPosRow -= 1
+				} else {
+					// 左
+					currentPosCol -= 1
+				}
+			} else if (currentPosCol-7)%4 == 2 {
+				// 右下 or 左
+				if currentPosRow == 20 && currentPosCol == 9 {
+					// ここは12,8に飛ぶ必要がある
+					currentPosCol = 8
+					currentPosRow = 12
+				} else if currentPosRow == 20 {
+					// 左
+					currentPosCol -= 1
+				} else {
+					// 右下
+					currentPosCol += 1
+					currentPosRow += 1
+				}
+			} else if (currentPosCol-7)%4 == 3 {
+				if currentPosRow == 6 {
+					// 下
+					currentPosRow += 1
+				} else {
+					// 左
+					currentPosCol -= 1
+				}
 			}
 		}
 	}
@@ -322,4 +369,5 @@ func main() {
 	}
 	fmt.Print(fmt.Sprintf("%x ", arrayData))
 	fmt.Println()
+	fmt.Println(bitmap[19][20])
 }
