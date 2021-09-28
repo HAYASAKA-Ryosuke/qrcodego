@@ -12,38 +12,9 @@ import (
 func drawCell(m *image.RGBA, row int, col int, color color.RGBA, cellSizeW int, cellSizeH int) {
 	for x := row * cellSizeW; x < row*cellSizeW+cellSizeW; x++ {
 		for y := col * cellSizeH; y < col*cellSizeH+cellSizeH; y++ {
-			m.Set(x, y, color)
+			m.Set(y, x, color)
 		}
 	}
-}
-
-func posUp(x, y int) (int, int, bool) {
-	if y-1 < 0 {
-		return x, y, false
-	}
-	return x, y - 1, true
-}
-
-func posDown(x, y, yLimit int) (int, int, bool) {
-	if y+1 > yLimit {
-		return x, y, false
-	}
-	return x, y + 1, true
-}
-
-func posLeft(x, y int) (int, int, bool) {
-	if x-1 < 0 {
-		return x, y, false
-	}
-
-	return x - 1, y, true
-}
-
-func posRight(x, y, xLimit int) (int, int, bool) {
-	if x+1 > xLimit {
-		return x, y, false
-	}
-	return x + 1, y, true
 }
 
 func DrawQRCode(bitmap [][]int) *image.RGBA {
@@ -301,8 +272,8 @@ func drawData(bitmap [][]int, bitString string) {
 }
 
 func drawMaskPattern(bitmap [][]int, row, col int) {
-	// 001
-	if row%2 == 0 {
+	// 000
+	if (row+col)%3 == 0 {
 		if bitmap[row][col] == 0 {
 			bitmap[row][col] = 1
 		} else {
@@ -310,6 +281,48 @@ func drawMaskPattern(bitmap [][]int, row, col int) {
 		}
 	}
 
+}
+
+func drawFormatbit(bitmap [][]int) {
+	bitString := "001100111010000"
+	count := 0
+	for col := 0; col < 8; col++ {
+		if col != 6 {
+			if bitString[count] == '0' {
+				bitmap[8][col] = 1
+			} else {
+				bitmap[8][col] = 0
+			}
+			count++
+		}
+	}
+	for row := 0; row < 9; row++ {
+		if row != 6 {
+			if bitString[count] == '0' {
+				bitmap[row][8] = 1
+			} else {
+				bitmap[row][8] = 0
+			}
+			count++
+		}
+	}
+	count = 0
+	for row := 0; row < 7; row++ {
+		if bitString[count] == '0' {
+			bitmap[20-row][8] = 1
+		} else {
+			bitmap[20-row][8] = 0
+		}
+		count++
+	}
+	for col := 0; col < 8; col++ {
+		if bitString[count] == '0' {
+			bitmap[8][col+13] = 1
+		} else {
+			bitmap[8][col+13] = 0
+		}
+		count++
+	}
 }
 
 func createBitmap(data []uint) [][]int {
@@ -324,6 +337,7 @@ func createBitmap(data []uint) [][]int {
 	fixedPatterns(result, len(result), 6)
 	drawData(result, bitString)
 	fmt.Println(bitString)
+	drawFormatbit(result)
 	return result
 }
 
