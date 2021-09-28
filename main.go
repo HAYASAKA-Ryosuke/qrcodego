@@ -67,18 +67,20 @@ func convertDataToBinaryString(str string) string {
 		文字列の長さが奇数の場合は最後の文字を6ビットで表現する
 	*/
 	result := ""
-	for i := 0; i < len(str)/2; i++ {
-		result += fmt.Sprintf("%011b", convertCharCode(int(str[i*2]))*45+convertCharCode(int(str[i*2+1])))
+	for i := 0; i < len(str); i++ {
+		result += fmt.Sprintf("%08b", int(str[i]))
 	}
-	if len(str)%2 == 1 {
-		result += fmt.Sprintf("%06b", convertCharCode(int(str[len(str)-1])))
-	}
+	//for i := 0; i < len(str)/2; i++ {
+	//	result += fmt.Sprintf("%011b", convertCharCode(int(str[i*2]))*45+convertCharCode(int(str[i*2+1])))
+	//}
+	//if len(str)%2 == 1 {
+	//	result += fmt.Sprintf("%06b", convertCharCode(int(str[len(str)-1])))
+	//}
 	return result
 }
 
 func charLength(str string, mode string) string {
-	// 今は英数字モードのみ扱う
-	return fmt.Sprintf("%09b", len(str))
+	return fmt.Sprintf("%08b", len(str))
 }
 
 func convertIntArray(str string) []uint {
@@ -343,19 +345,12 @@ func createBitmap(data []uint) [][]int {
 	return result
 }
 
-//func generateRS(data []uint) []uint {
-//	/* 1-H型は誤り訂正コード語数が17なので
-//	x17 +α43x16+α139x15+α206x14 +α78x13+α43x12+α239x11 +α123x10+α206x9+α214x8 +α147x7+α24x6+α99x5 +α150x4+α39x3+α243x2 +α163x+α136
-//	をつかう
-//	*/
-//}
-
 func main() {
-	message := "ABCDE123"
+	message := "Abc123"
 	data := ""
 
 	// モード指示子
-	mode := "0010"
+	mode := "0100"
 	data += mode
 
 	// 文字数指示子
