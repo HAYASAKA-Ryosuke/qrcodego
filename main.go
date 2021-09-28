@@ -175,6 +175,28 @@ func fixedPatterns(bitmap [][]int, cellSize, fixedPos int) {
 	bitmap[13][8] = 0
 }
 
+func moveLeft(row, col int) (int, int) {
+	return row, col - 1
+}
+
+func moveRight(row, col int) (int, int) {
+	return row, col + 1
+}
+
+func moveDown(row, col int) (int, int) {
+	return row + 1, col
+}
+func moveUp(row, col int) (int, int) {
+	return row - 1, col
+}
+
+func moveUpRight(row, col int) (int, int) {
+	return row - 1, col + 1
+}
+func moveDownRight(row, col int) (int, int) {
+	return row + 1, col + 1
+}
+
 func drawData(bitmap [][]int, bitString string) {
 	currentPosRow := len(bitmap) - 1
 	currentPosCol := len(bitmap[0]) - 1
@@ -193,7 +215,6 @@ func drawData(bitmap [][]int, bitString string) {
 			} else {
 				bitmap[currentPosRow][currentPosCol] = 0
 			}
-			//drawMaskPattern(bitmap, currentPosRow, currentPosCol)
 		}
 		fmt.Printf("Row: %d, Col: %d\n", currentPosRow, currentPosCol)
 		if currentPosCol == 0 && currentPosRow == 12 {
@@ -203,68 +224,49 @@ func drawData(bitmap [][]int, bitString string) {
 		} else if currentPosCol < 6 {
 			if currentPosCol%4 == 0 {
 				if currentPosRow == 12 {
-					// 左
-					currentPosCol -= 1
+					currentPosRow, currentPosCol = moveLeft(currentPosRow, currentPosCol)
 				} else {
-					// 右下
-					currentPosCol += 1
-					currentPosRow += 1
+					currentPosRow, currentPosCol = moveDownRight(currentPosRow, currentPosCol)
 				}
 			} else if currentPosCol%4 == 1 {
-				// 左
-				currentPosCol -= 1
+				currentPosRow, currentPosCol = moveLeft(currentPosRow, currentPosCol)
 			} else if currentPosCol%4 == 2 {
 				if currentPosRow == 9 {
-					// 左
-					currentPosCol -= 1
+					currentPosRow, currentPosCol = moveLeft(currentPosRow, currentPosCol)
 				} else {
-					// 右上
-					currentPosCol += 1
-					currentPosRow -= 1
+					currentPosRow, currentPosCol = moveUpRight(currentPosRow, currentPosCol)
 				}
 			} else if currentPosCol%4 == 3 {
-				// 左
-				currentPosCol -= 1
+				currentPosRow, currentPosCol = moveLeft(currentPosRow, currentPosCol)
 			}
 		} else {
 			if (currentPosCol-7)%4 == 0 {
 				if currentPosRow == 0 || (currentPosRow == 9 && (currentPosCol <= 8 || currentPosCol >= 13)) {
-					// 左
-					currentPosCol -= 1
+					currentPosRow, currentPosCol = moveLeft(currentPosRow, currentPosCol)
 				} else {
-					// 右上
-					currentPosCol += 1
-					currentPosRow -= 1
+					currentPosRow, currentPosCol = moveUpRight(currentPosRow, currentPosCol)
 				}
 			} else if (currentPosCol-7)%4 == 1 {
 				if currentPosRow == 6 {
-					// 上
-					currentPosRow -= 1
+					currentPosRow, currentPosCol = moveUp(currentPosRow, currentPosCol)
 				} else {
-					// 左
-					currentPosCol -= 1
+					currentPosRow, currentPosCol = moveLeft(currentPosRow, currentPosCol)
 				}
 			} else if (currentPosCol-7)%4 == 2 {
-				// 右下 or 左
 				if currentPosRow == 20 && currentPosCol == 9 {
 					// ここは12,8に飛ぶ必要がある
 					currentPosCol = 8
 					currentPosRow = 12
 				} else if currentPosRow == 20 {
-					// 左
-					currentPosCol -= 1
+					currentPosRow, currentPosCol = moveLeft(currentPosRow, currentPosCol)
 				} else {
-					// 右下
-					currentPosCol += 1
-					currentPosRow += 1
+					currentPosRow, currentPosCol = moveDownRight(currentPosRow, currentPosCol)
 				}
 			} else if (currentPosCol-7)%4 == 3 {
 				if currentPosRow == 6 {
-					// 下
-					currentPosRow += 1
+					currentPosRow, currentPosCol = moveDown(currentPosRow, currentPosCol)
 				} else {
-					// 左
-					currentPosCol -= 1
+					currentPosRow, currentPosCol = moveLeft(currentPosRow, currentPosCol)
 				}
 			}
 		}
