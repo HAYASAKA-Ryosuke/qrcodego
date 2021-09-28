@@ -9,9 +9,9 @@ import (
 	"strconv"
 )
 
-func drawCell(m *image.RGBA, offsetx int, offsety int, color color.RGBA, cellSizeW int, cellSizeH int) {
-	for x := offsetx * cellSizeW; x < offsetx*cellSizeW+cellSizeW; x++ {
-		for y := offsety * cellSizeH; y < offsety*cellSizeH+cellSizeH; y++ {
+func drawCell(m *image.RGBA, row int, col int, color color.RGBA, cellSizeW int, cellSizeH int) {
+	for x := row * cellSizeW; x < row*cellSizeW+cellSizeW; x++ {
+		for y := col * cellSizeH; y < col*cellSizeH+cellSizeH; y++ {
 			m.Set(x, y, color)
 		}
 	}
@@ -191,16 +191,16 @@ func fixedPatterns(bitmap [][]int, cellSize, fixedPos int) {
 	}
 	for i := 0; i < 8; i++ {
 		if i != fixedPos {
-			bitmap[8][i] = 2
-			bitmap[i][8] = 2
+			bitmap[8][i] = 1
+			bitmap[i][8] = 1
 		}
 		if i != fixedPos+13 {
-			bitmap[i+13][8] = 2
-			bitmap[8][i+13] = 2
+			bitmap[i+13][8] = 1
+			bitmap[8][i+13] = 1
 		}
 
 	}
-	bitmap[8][8] = 2
+	bitmap[8][8] = 1
 	bitmap[13][8] = 0
 }
 
@@ -212,11 +212,17 @@ func drawData(bitmap [][]int, bitString string) {
 		if currentPosCol != 6 && currentPosRow != 6 {
 			if count < len(bitString) {
 				fmt.Println(int(bitString[count]) - 48)
-				bitmap[currentPosRow][currentPosCol] = int(bitString[count]) - 48
+				if int(bitString[count]) == '0' {
+					bitmap[currentPosRow][currentPosCol] = 1
+				} else {
+					bitmap[currentPosRow][currentPosCol] = 0
+				}
 				count++
+				drawMaskPattern(bitmap, currentPosRow, currentPosCol)
 			} else {
 				bitmap[currentPosRow][currentPosCol] = 0
 			}
+			//drawMaskPattern(bitmap, currentPosRow, currentPosCol)
 		}
 		fmt.Printf("Row: %d, Col: %d\n", currentPosRow, currentPosCol)
 		if currentPosCol == 0 && currentPosRow == 12 {
@@ -292,6 +298,18 @@ func drawData(bitmap [][]int, bitString string) {
 			}
 		}
 	}
+}
+
+func drawMaskPattern(bitmap [][]int, row, col int) {
+	// 001
+	if row%2 == 0 {
+		if bitmap[row][col] == 0 {
+			bitmap[row][col] = 1
+		} else {
+			bitmap[row][col] = 0
+		}
+	}
+
 }
 
 func createBitmap(data []uint) [][]int {
